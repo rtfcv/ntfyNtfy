@@ -1,0 +1,2 @@
+TOPICTOKEN = r''
+TIME = 30

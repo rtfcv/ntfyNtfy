@@ -81,14 +81,14 @@ notific = pyNotify.PyNotify()
 def dateText():
     return dt.datetime.now().isoformat("_", "seconds")
 
-
+# https://qiita.com/megmogmog1965/items/5f95b35539ed6b3cfa17
 def get_lines():
     '''
     :param cmd: list 実行するコマンド.
     :rtype: generator
     :return: 標準出力 (行毎).
     '''
-    cmd=f'ntfy sub {TOPICTOKEN}'
+    cmd=f'ntfy sub {settings.TOPICTOKEN}'
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while True:
@@ -106,13 +106,17 @@ if __name__ == '__main__':
         lineStr = lineBytes.decode('utf-8')
         if len(lineStr)==0:
             continue
+
         lineData = dict()
+
         try:
             lineData = json.loads(lineStr)
         except BaseException as e:
             print(f'{e.__class__.__name__}: {e}')
             continue
+
         sys.stdout.write(str(lineData))
+
         title = lineData['title'] if 'title' in lineData else ''
         message = lineData['message'] if 'message' in lineData else 'No Message'
-        notific.notify('gclb', title, message)
+        notific.notify('ntfy', title, message)
